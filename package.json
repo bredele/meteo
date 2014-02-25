@@ -1,6 +1,6 @@
 {
   "name": "meteo",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Command line to get the wather based on location.",
   "main": "index.js",
   "scripts": {
