@@ -25,3 +25,6 @@ Here's the different options :
 	    Print the current weather conditions and forecast.
 	    Options:
 	        -l    Weather location.
+	        -u    Temperature unit (c/f).
+
+`meteo` is smart and saves the last known location or units.

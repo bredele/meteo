@@ -30,8 +30,15 @@ write(resolve(__dirname, '../etc/conf.json'), JSON.stringify(conf), function (er
 });
 
 request.get('http://api.openweathermap.org/data/2.5/weather?q=' + conf.city + '&units=metric&mode=json', function(res){
-	var weather = JSON.parse(res.text);
+	var weather = JSON.parse(res.text),
+			temp = weather.main.temp,
+			unit = ' °C';
+
+	if(conf.unit === 'f') {
+		temp = temp * 1.8 + 32;
+		unit = ' °F'
+	}
 	log(conf.city);
 	log('  ' + weather.weather[0].description);
-	log('  ' + weather.main.temp + '°C', '34');
+	log('  ' + String(temp).substring(0,4) + unit, '34');
 });
