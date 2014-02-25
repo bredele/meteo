@@ -16,8 +16,7 @@ function log(msg, color){
 program
   .version(require('../package.json').version)
   .option('-l, --location <location>', 'weather location', 'Calgary')
-
-
+  program.parse(process.argv);
 
 
 request.get('http://api.openweathermap.org/data/2.5/weather?q=' + program.location + '&units=metric&mode=json', function(res){
