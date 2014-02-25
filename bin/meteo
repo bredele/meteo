@@ -1,2 +1,34 @@
-#!/usr/bin/env bash
+#!/usr/bin/env node
 
+var request = require('superagent'),
+		program = require('commander');
+
+function log(msg, color){
+  color = color || '36';
+  var w = 10;
+  console.log('  \033[' + color + 'm%s\033[m',  msg);
+};		
+
+/**
+ * Usage.
+ */
+
+program
+  .version(require('../package.json').version)
+  .option('-l, --location <location>', 'weather location', 'Calgary')
+
+
+
+/**
+ * Examples.
+ */
+
+program.on('--help', function () {
+  console.log('  Examples:');
+});
+
+
+
+request.get('http://api.openweathermap.org/data/2.5/weather?q=' + program.location, function(res){
+	log(res.text);
+});
