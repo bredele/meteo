@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 
 var request = require('superagent'),
-		program = require('commander');
+		program = require('commander'),
+		write = require('fs').writeFile,
+		resolve = require('path').resolve,
+		conf = require('../etc/conf.json')
 
 function log(msg, color){
   color = color || '36';
@@ -15,13 +18,20 @@ function log(msg, color){
 
 program
   .version(require('../package.json').version)
-  .option('-l, --location <location>', 'weather location', 'Calgary')
+  .option('-l, --location <location>', 'weather location')
+  .option('-u, --unit <unit>', 'temperature unit')  
   program.parse(process.argv);
 
+conf.city = program.location || conf.city;
+conf.unit = program.unit || conf.unit;
 
-request.get('http://api.openweathermap.org/data/2.5/weather?q=' + program.location + '&units=metric&mode=json', function(res){
+write(resolve(__dirname, '../etc/conf.json'), JSON.stringify(conf), function (err) {
+  if (err) throw err;
+});
+
+request.get('http://api.openweathermap.org/data/2.5/weather?q=' + conf.city + '&units=metric&mode=json', function(res){
 	var weather = JSON.parse(res.text);
-	log(program.location);
+	log(conf.city);
 	log('  ' + weather.weather[0].description);
 	log('  ' + weather.main.temp + '°C', '34');
 });
