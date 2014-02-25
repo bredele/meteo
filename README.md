@@ -28,3 +28,9 @@ Here's the different options :
 	        -u    Temperature unit (c/f).
 
 `meteo` is smart and saves the last known location or units.
+
+## Example
+
+Displays the weather in Paris in fahrenheit:
+
+    $ meteo -l 'paris' -u 'f'
