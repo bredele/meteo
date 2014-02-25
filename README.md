@@ -22,6 +22,5 @@ Using `meteo` is really simple, just type the following command:
 Here's the different options :
     weather [OPTION]...
     Print the current weather conditions and forecast.
-    
     Options:
         -l    Weather location.
