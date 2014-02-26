@@ -4,13 +4,22 @@ var request = require('superagent'),
 		program = require('commander'),
 		write = require('fs').writeFile,
 		resolve = require('path').resolve,
-		conf = require('../etc/conf.json')
+		conf = require('../etc/conf.json'),
+		Table = require('cli-table'),
+		colors = require('colors');
 
-function log(msg, color){
-  color = color || '36';
-  var w = 10;
-  console.log('  \033[' + color + 'm%s\033[m',  msg);
+
+/**
+ * Covert unix time to JavaScript
+ * @param  {String} unix 
+ * @return {String} 
+ */
+
+function convertTime(unix) {
+	var date = new Date(unix*1000);
+	return date.getHours() + ':' + date.getMinutes();
 }
+
 
 /**
  * Usage.
@@ -22,23 +31,50 @@ program
   .option('-u, --unit <unit>', 'temperature unit')  
   program.parse(process.argv);
 
+
+//settings
+
 conf.city = program.location || conf.city;
 conf.unit = program.unit || conf.unit;
+
+
+// instantiate
+
+var table = new Table({
+    head: [
+    'City', 
+    'Temp ' + (conf.unit === 'c' ? '°C' : '°F').grey, 
+    'Wind ' + 'km/h'.grey, 
+    'Humidity ' + '%'.grey]
+  , colWidths: [16, 11, 11, 20]
+});
+
+
+//update conf
 
 write(resolve(__dirname, '../etc/conf.json'), JSON.stringify(conf), function (err) {
   if (err) throw err;
 });
 
+
+//request weather
+
 request.get('http://api.openweathermap.org/data/2.5/weather?q=' + conf.city + '&units=metric&mode=json', function(res){
 	var weather = JSON.parse(res.text),
-			temp = weather.main.temp,
-			unit = ' °C';
+			temp = weather.main.temp;
 
-	if(conf.unit === 'f') {
-		temp = temp * 1.8 + 32;
-		unit = ' °F'
-	}
-	log(conf.city);
-	log('  ' + weather.weather[0].description);
-	log('  ' + String(temp).substring(0,4) + unit, '34');
+	if(conf.unit === 'f') temp = temp * 1.8 + 32;
+
+	//weather widget
+	table.push([weather.name, (' ' + String(temp).substring(0,4) + ' ').bold.inverse, weather.wind.speed, weather.main.humidity]);
+	console.log('\n' + table.toString() + '\n');
+
+	//weather details
+	console.log('TODAY', weather.weather[0].description.grey, '\n');
+	console.log('   low '.grey,
+		weather.main.temp_min + '°',
+		'   high '.grey,weather.main.temp_max + '°',
+		'   sunrise '.grey,convertTime(weather.sys.sunrise) + ' AM',
+		'   sunset '.grey,convertTime(weather.sys.sunset) + ' PM\n');
+
 });
