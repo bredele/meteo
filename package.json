@@ -1,6 +1,6 @@
 {
   "name": "meteo",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Command line to get the weather based on location.",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "url": "git://github.com/bredele/meteo.git"
   },
   "keywords": [
-    "wather",
+    "weather",
     "shell"
   ],
   "bin": {
