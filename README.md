@@ -18,6 +18,7 @@ Also I spend most of my time on my command shell and I figured it would be great
 Using `meteo` is really simple, just type the following command:
 
     $ meteo
+  
 
 Here's the different options :
 

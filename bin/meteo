@@ -53,7 +53,7 @@ var table = new Table({
 //update conf
 
 write(resolve(__dirname, '../etc/conf.json'), JSON.stringify(conf), function (err) {
-  if (err) throw err;
+  if (err) console.log('execute the command with sudo to save your options\n\n'.warn);
 });
 
 
